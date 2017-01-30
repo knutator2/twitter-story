@@ -1,0 +1,50 @@
+extends ../page
+
+block content
+    .container-fluid(ng-controller='AnalyzeOverviewCtrl')
+        .row
+            .col-lg-12
+                h1.page-header Overview
+                .tweets
+                .ct-chart(ng-chartist='', id='graph_id', class="ct-chart", data='tweetSeries', options='', type='Line', tooltips='true')
+            // /.col-lg-12
+        // /.row
+        .row
+            .col-lg-6
+                h1 Top Users
+                .table-responsive
+                    table.table.table-bordered.table-hover.table-striped
+                        thead
+                            tr
+                                th #
+                                th Username
+                                th Tweets
+                                th Profile Image
+                        tbody(data-ng-repeat='user in topUsers track by $index')
+                            tr
+                                td {{user.id}}
+                                td {{user.name}}
+                                td {{user.tweets}}
+                                td
+                                    img(ng-src='{{user.profile_image}}' class='text-center')
+            .col-lg-6
+                h1 Hashtags
+                .table-responsive
+                    table.table.table-bordered.table-hover.table-striped
+                        thead
+                            tr
+                                th Hashtag
+                                th Amount
+                        tbody(data-ng-repeat='hashtag in topHashtags track by $index')
+                            tr
+                                td {{hashtag.value}}
+                                td {{hashtag.count}}
+                            //    td {{user.tweets}}
+                            //    td
+                            //        img(src='{{user.profile_image_url}}')
+                        // /tbody
+                    // /table
+                // /.table-responsive
+            // /.col-lg-4
+        // /.row
+    // /.container-fluid

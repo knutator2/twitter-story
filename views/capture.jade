@@ -1,0 +1,46 @@
+extends page
+
+block content
+    .container-fluid
+        .row
+            .col-lg-12(ng-controller='CaptureCtrl')
+                h1.page-header Capture
+                h2 Start new Capture
+                .new-capture
+                    label Name:
+                    input(ng-model="binNameText")
+
+                    label Keywords
+                    input(ng-model='keywordsText')
+
+                    button.btn-primary(ng-click='startTrack()') Submit
+                h2 Captures
+                .table-responsive
+                    table.table
+                        thead
+                            tr
+                                th #
+                                th Name
+                                th Keywords
+                                th Active
+                                th started
+                                th stopped
+                                th tweets
+                                th options
+                        tbody(data-ng-repeat='track in tracks track by $index')
+                            tr
+                                td {{$index + 1}}
+                                td {{track.name}}
+                                td {{track.keywords}}
+                                td {{track.active}}
+                                td {{track.started | date : 'dd.MM.yyyy'}}
+                                td {{track.stopped | date : 'dd.MM.yyyy'}}
+                                td {{track.tweets}}
+                                td
+                                    button.btn-danger Delete
+                                    button.btn-warning(ng-click='stopTrack(track.name)') Stop
+                                    button.btn-info(ng-click='resumeTrack(track.name)') Resume
+                                    button.btn-success View
+            // /.col-lg-12
+        // /.row
+    // /.container-fluid

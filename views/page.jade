@@ -1,0 +1,77 @@
+extends layout
+
+block nav
+    #wrapper
+        // Navigation
+        nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bottom: 0')
+            .navbar-header
+                button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+                a.navbar-brand(href='/') Twitter Capture
+            // /.navbar-header
+            ul.nav.navbar-top-links.navbar-right
+                li.dropdown
+                    a.dropdown-toggle(data-toggle='dropdown', href='#')
+                        i.fa.fa-user.fa-fw
+                        i.fa.fa-caret-down
+                    ul.dropdown-menu.dropdown-user
+                        li
+                            a(href='#')
+                                i.fa.fa-user.fa-fw
+                                |  User Profile
+                        li
+                            a(href='#')
+                                i.fa.fa-gear.fa-fw
+                                |  Settings
+                        li.divider
+                        li
+                            a(href='login.html')
+                                i.fa.fa-sign-out.fa-fw
+                                |  Logout
+                    // /.dropdown-user
+                // /.dropdown
+            // /.navbar-top-links
+            .navbar-default.sidebar(role='navigation')
+                .sidebar-nav.navbar-collapse
+                    ul#side-menu.nav
+                        li
+                            a(href='/index/')
+                                i.fa.fa-dashboard.fa-fw
+                                |  Dashboard
+                        li
+                            a(href='#')
+                                i.fa.fa-bar-chart-o.fa-fw
+                                |  Analysis
+                                span.fa.arrow
+                            ul.nav.nav-second-level
+                                li
+                                    a(href='/analysis/overview') Overview
+                                li
+                                    a(href='/analysis/modeling') Modeling
+                                li
+                                    a(href='/analysis/topic_timelines') Topic Timelines
+                                li
+                                    a(href='/analysis/statistics') Statistics
+                                li
+                                    a(href='/analysis/network') Network Analysis
+                                li
+                                    a(href='/analysis/reports') Reports
+                            // /.nav-second-level
+                        li
+                            a(href='/capture')
+                                i.fa.fa-table.fa-fw
+                                |  Capture
+                // /.sidebar-collapse
+            // /.navbar-static-side
+        // Page Content
+        #page-wrapper
+            block content
+                // /.col-lg-12
+            // /.row
+            // /.container-fluid
+        // /#page-wrapper
+    // /#wrapper
+    // jQuery

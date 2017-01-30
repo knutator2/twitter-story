@@ -1,0 +1,24 @@
+{
+  "name": "twitter-story",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "istanbul cover _mocha"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.1",
+    "chai": "^3.5.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.13.4",
+    "jade": "~1.11.0",
+    "mongodb": "^2.2.5",
+    "monk": "^3.1.1",
+    "morgan": "~1.7.0",
+    "node-tweet-stream": "^2.0.1",
+    "serve-favicon": "~2.3.0",
+    "sinon": "^1.17.5",
+    "supertest": "^2.0.0"
+  }
+}

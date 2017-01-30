@@ -1,0 +1,15 @@
+{
+  "twitter" : {
+    "consumer_key": "8tqSWXyazwcaUgpcN2QPdjzC3",
+    "consumer_secret": "NTk0JzaYfbDPwwu9rn3wvtxc8wzymgK6zX1fG2yjDHWnrbAqFE",
+    "token": "763758236369555456-rkg5CY1ehIxwLtEGI2MSfHpGSTaXFw7",
+    "token_secret": "a9AjPNOLtZz4t1BPZ0yIUyEzR5iCou11xvfQwjc7kXJb8"
+  },
+  "database": {
+    "dest": "localhost",
+    "port": 27017,
+    "db": "twitter-capture",
+    "user": "",
+    "passphrase": ""
+  }
+}
