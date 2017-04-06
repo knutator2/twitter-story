@@ -34,29 +34,11 @@ TwitterAnalyzer.prototype.getUserInformationForTrack = function(track, userId) {
     var self = this;
     var collection = self.db.collection(track);
     return new Promise(function(fulfill, reject) {
-        collection.findOne({"from_user_id":userId}, function(err, item) {
+        collection.findOne({"user.id":userId}, function(err, item) {
             if (err) {
                 reject(err);
             } else {
-                fulfill({
-                    name: item.from_user_name,
-                    id: item.from_user_id,
-                    lang: item.from_user_lang,
-                    tweetcount: item.from_user_tweetcount,
-                    followercount: item.from_user_followercount,
-                    friendcount: item.from_user_friendcount,
-                    listed: item.from_user_listed,
-                    realname: item.from_user_realname,
-                    utcoffset: item.from_user_utcoffset,
-                    timezone: item.from_user_timezone,
-                    description: item.from_user_description,
-                    url: item.from_user_url,
-                    verified: item.from_user_verified,
-                    profile_image: item.from_user_profile_image_url,
-                    created_at: item.from_user_created_at,
-                    withheld_scope: item.from_user_withheld_scope,
-                    favourites_count: item.from_user_favourites_count
-                });
+                fulfill(item.user);
             }
         });
     });
@@ -67,7 +49,7 @@ TwitterAnalyzer.prototype.getTopUsersForTrack = function(track, amount) {
     var collection = self.db.collection(track);
     return new Promise(function(fulfill, reject) {
         collection.aggregate([
-            {$group: {_id: "$from_user_id", total: {$sum: 1}}},
+            {$group: {_id: "$user.id", total: {$sum: 1}}},
             {$sort:{total:-1}},
             {$limit:amount}])
         .toArray(function(err, docs) {
@@ -81,23 +63,32 @@ TwitterAnalyzer.prototype.getTopUsersForTrack = function(track, amount) {
     });
 };
 
-TwitterAnalyzer.prototype.getTopHashTagsForTrack = function(track, amount) {
+TwitterAnalyzer.prototype.getTopHashTagsForTrack = function(track, minAmount) {
     var self = this;
     var collection = self.db.collection(track);
 
-    //aggregate([{$unwind:"$hashtags"}, {$group: {_id:"$hashtags", count:{$sum: 1}}}, {$sort:{count:-1}}])
+    var map = function() {
+        for (var i = 0; i < this.entities.hashtags.length; i++) {
+            emit(this.entities.hashtags[i].text, 1)
+        }
+    };
+
+    var reduce = function(hashtag, amount) {
+        return Array.sum(amount);
+    };
+
     return new Promise(function(fulfill, reject) {
-        collection.aggregate([
-            {$unwind:"$hashtags"},
-            {$group: {_id:"$hashtags", count:{$sum: 1}}},
-            {$sort:{count:-1}},
-            {$limit:amount}
-        ])
-        .toArray(function(err, docs) {
-            console.log(docs);
-            var hashtags = docs.map((elem) => {return {count: elem.count, value:elem._id}})
-            fulfill(hashtags);
-        })
+        collection.mapReduce(map, reduce, {out: {inline:1}, verbose: true}, function(err,results, stats) {
+            if (err) {
+                reject(err);
+            }
+            else {
+                results = results.sort(function (a, b) {
+                    return b.value - a.value
+                });
+                fulfill(results.slice(0, minAmount));
+            }
+        });
     });
 };
 
@@ -147,25 +138,13 @@ TwitterAnalyzer.prototype.getTweetSeriesForTrack = function(track) {
     var collection = self.db.collection(track);
     return new Promise(function(fulfill, reject) {
         collection.aggregate([
-            {
-                $group: {
-                    _id: {
-                        hour: {$hour: "$created_at"},
-                        day: {$dayOfMonth: "$created_at"},
-                        month: {$month: "$created_at"},
-                        year: {$year: "$created_at"}
-                    },
-                    count: { $sum:1 }
-                }
-            }
+            {$project: {timestamp_ms:1}},
+            {$sort: {timestamp_ms: -1}}
         ]).toArray(function(err,docs) {
             if (err) {
                 reject(err)
             } else {
-                var series = docs.map(function(elem) {
-                    return {count: elem.count, time: elem._id}
-                });
-                fulfill(series)
+                fulfill(docs)
             }
         });
     })

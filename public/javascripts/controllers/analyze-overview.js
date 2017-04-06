@@ -1,6 +1,6 @@
 app.controller('AnalyzeOverviewCtrl', function($scope, $http) {
     $scope.tweetSeries = {series:[[1,2,3,4,5,6]], labels:[]};
-    $scope.activeTrack = 'brexit_sample';
+    $scope.activeTrack = 'london';
     $scope.topUsers = [];
     $scope.topHashtags = [];
 
@@ -8,8 +8,17 @@ app.controller('AnalyzeOverviewCtrl', function($scope, $http) {
         $http.get('/analyze/' + $scope.activeTrack + '/tweets/series').then(function(response) {
             var tweets = response.data;
             $scope.tweetSeries.index = [];
-
-            $scope.tweetSeries.series = [tweets.map(function(elem) { return elem.count})];
+            var min = parseInt(response.data.reduce(function(prev, curr) {
+                return prev.timestamp_ms < curr.timestamp_ms ? prev.timestamp_ms : curr.timestamp_ms;
+            }));
+            var minCat =  Math.floor(min / 1000000) * 1000000;
+            var groups = groupBy(tweets, function(x) { return Math.floor(x.timestamp_ms / 1000000) })
+                            .map(function(elem, index) {
+                                var category = index * 1000000 + minCat;
+                                $scope.tweetSeries.labels.push(moment(category.toString(), 'x').format("YYYY-MM-DD"));
+                                return elem.length;
+                        });
+            $scope.tweetSeries.series = [groups];
         })
     }
 

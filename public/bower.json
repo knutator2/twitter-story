@@ -40,8 +40,7 @@
     "angular": "^1.5.8",
     "chartistAngularDirective.js": "chartist-directive#^1.0.9",
     "moment": "^2.16.0",
-    "angularjs-slider": "^5.8.7",
-    "d3": "^4.4.4"
+    "angularjs-slider": "^5.8.7"
   },
   "resolutions": {
     "angular": "^1.5.8",

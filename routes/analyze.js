@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var TwitterAnalyzer = require('../modules/analyzer');
-var analyzer  = new TwitterAnalyzer("mongodb://localhost:27017/twitterstories");
+var analyzer  = new TwitterAnalyzer("mongodb://localhost:27017/exampleDb");
 
 router.get('/:track/users', function(req, res) {
     analyzer.getUsersForTrack(req.params.track).then(function (users) {

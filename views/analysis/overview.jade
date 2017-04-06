@@ -26,7 +26,7 @@ block content
                                 td {{user.name}}
                                 td {{user.tweets}}
                                 td
-                                    img(ng-src='{{user.profile_image}}' class='text-center')
+                                    img(src='{{user.profile_image_url}}')
             .col-lg-6
                 h1 Hashtags
                 .table-responsive
@@ -37,8 +37,8 @@ block content
                                 th Amount
                         tbody(data-ng-repeat='hashtag in topHashtags track by $index')
                             tr
+                                td {{hashtag._id}}
                                 td {{hashtag.value}}
-                                td {{hashtag.count}}
                             //    td {{user.tweets}}
                             //    td
                             //        img(src='{{user.profile_image_url}}')

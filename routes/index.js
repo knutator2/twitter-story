@@ -23,12 +23,8 @@ router.get('/analysis/overview/', function(req, res) {
     res.render('analysis/overview');
 });
 
-router.get('/analysis/modeling/', function(req, res) {
-    res.render('analysis/modeling');
-});
-
-router.get('/analysis/topic_timelines/', function(req, res) {
-    res.render('analysis/topic_timelines');
+router.get('/analysis/events/', function(req, res) {
+    res.render('analysis/events');
 });
 
 router.get('/analysis/statistics', function(req, res) {

@@ -24,7 +24,7 @@ var TrackerWriter = function (tracker, db, error) {
             console.log(tracks);
             for (var i = 0; i < tracks.length; i++) {
                 var currentTrack = tracks[i];
-                if (currentTrack.active == true) {
+                if (currentTrack.active) {
                     for (var j = 0; j < currentTrack.keywords.length; j++) {
                         self.tracker.track(currentTrack.keywords[j]);
                     }
@@ -36,14 +36,13 @@ var TrackerWriter = function (tracker, db, error) {
     this.tracker.on('tweet', function (tweet) {
         //write to db“
         //console.log('incoming tweet');
-        //tweet.created_at = new Date(tweet.created_at);
+        tweet.created_at = new Date(tweet.created_at);
         self.db.collection('meta').find().toArray(function (err, docs) {
             for (var i = 0; i < docs.length; i++) {
                 var currentMeta = docs[i];
-                var tweetHasKeyword = currentMeta.keywords.some(function(item){return (new RegExp(item)).test(tweet.text.toLowerCase());})
-                if (currentMeta.active == true && tweetHasKeyword) {
+                if (currentMeta.keywords.some(function(item){return (new RegExp(item)).test(tweet.text.toLowerCase());}) ) {
                     var collection = self.db.collection(currentMeta.name);
-                    collection.insert(mapTweet(tweet));
+                    collection.insert(tweet);
                 }
             }
         });
@@ -52,54 +51,7 @@ var TrackerWriter = function (tracker, db, error) {
     this.tracker.on('error', function (error) {
         console.log('Something went terribly wrong in the twitter-tracker mdoule');
         console.log(error);
-    });
-
-    function mapTweet(tweet) {
-        var result = {
-            id: tweet.id,
-            created_at: new Date(tweet.created_at),
-            from_user_name: tweet.user.screen_name,
-            from_user_id: tweet.user.id,
-            from_user_lang: tweet.user.lang,
-            from_user_tweetcount: tweet.user.statuses_count,
-            from_user_followercount: tweet.user.followers_count,
-            from_user_friendcount: tweet.user.friends_count ,
-            from_user_listed: tweet.user.listed_count,
-            from_user_realname: tweet.user.name,
-            from_user_utcoffset: tweet.user.utc_offset,
-            from_user_timezone: tweet.user.time_zone,
-            from_user_description: tweet.user.description,
-            from_user_url: tweet.user.url,
-            from_user_verified: tweet.user.verified,
-            from_user_profile_image_url: tweet.user.profile_image_url,
-            from_user_created_at: tweet.user.created_at,
-            from_user_withheld_scope: tweet.user.withheld_scope,
-            from_user_favourites_count: tweet.user.favourites_count,
-            source: tweet.source,
-            location: tweet.place,
-            geo: tweet.coordinates,
-            text: tweet.text,
-            favorite_count: tweet.favourite_count,
-            to_user_id: tweet.in_reply_to_user_id,
-            to_user_name: tweet.in_reply_to_screen_name,
-            in_reply_to_status_id: tweet.in_reply_to_status_id,
-            filter_level: tweet.filter_level,
-            lang: tweet.lang,
-            possibly_sensitive: tweet.possibly_sensitive,
-            quoted_status_id: tweet.quoted_status_id,
-            truncated: tweet.truncated,
-            withheld_copyright: tweet.withheld_copyright,
-            withheld_scope: tweet.withheld_scope
-        };
-        if (tweet.retweeted_status) {
-            result.retweet_id = tweet.retweeted_status.id;
-            result.retweet_count = tweet.retweeted_status.retweet_count;
-        } else {
-            result.retweet_id = null;
-            result.retweet_count = null;
-        }
-        return result;
-    }
+    })
 };
 
 TrackerWriter.prototype.startTrack = function (name, keywords) {

@@ -8,7 +8,7 @@ var tracker = new Tracker(new Twitter({
     consumer_secret: 'NTk0JzaYfbDPwwu9rn3wvtxc8wzymgK6zX1fG2yjDHWnrbAqFE',
     token: '763758236369555456-rkg5CY1ehIxwLtEGI2MSfHpGSTaXFw7',
     token_secret: 'a9AjPNOLtZz4t1BPZ0yIUyEzR5iCou11xvfQwjc7kXJb8'
-}), "mongodb://localhost:27017/twitterstories");
+}), "mongodb://localhost:27017/exampleDb");
 
 /* GET users listing. */
  router.get('/*', function(req, res, next) {
